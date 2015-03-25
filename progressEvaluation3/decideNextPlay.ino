@@ -1,63 +1,3 @@
-#include <stdio.h> 
-
-//Declare variables 
-char const me = 'w'; 
-char const oppo = 'b'; 
-char board[6*7]; 
-int topOfColumn[] = {6, 6, 6, 6, 6, 6, 6}; 
-int const initialDepth = 3; 
-int const relativeSpd = 1;
-
-//Declare sructs 
-//NBL: Number of Balls in Line 
-//NBLC: NBL Count 
-typedef struct 
-{
-	int meBC; 
-	int oppoBC; 
-	int meNBLC[5]; 
-	int oppoNBLC[5];  
-} hScoreInfo;
-
-hScoreInfo myhScoreInfo;
-
-//Declare functions 
-void initializeBoard(); 
-void initializehScoreInfo();
-void manuallyUpdateBoard();
-void updateTopOfColumn();  
-void printBoard(); 
-
-void makeMove(int moveCol, char player);
-void undoMove(int moveCol); 
-int negamax_NA(int parentCol, int color, int depth, int spdFactor, int isFaster); 
-//If parentCol = -1, it's the original parent. 
-//color = 1 for me, color = -1 for oppo
-
-//void updateBoard(); 
-void updateBC(); 
-void updateNBLC_col();
-void updateNBLC_row(); 
-void updateNBLC_diag(); 
-int calculatehScore();
- 
-int main() 
-{
-	initializeBoard(); 
-	initializehScoreInfo();
-	manuallyUpdateBoard();
-	updateTopOfColumn();
-	updateBC(); 
-	updateNBLC_col();
-	updateNBLC_row();
-	updateNBLC_diag();
-
-	int nextMoveCol = negamax_NA(-1, 1, initialDepth, relativeSpd, 1); 
- 
-	makeMove(nextMoveCol, me); 
-	printBoard();   	  
-}
-
 void initializeBoard() 
 {
 	for (int i=0; i<6*7; i++) 
@@ -151,13 +91,14 @@ void printBoard()
 	{
 		for (int c=0; c<7; c++) 
 		{
-			printf("%c ", board[r*7+c]);  
+			Serial.print(board[r*7+c]);
+			Serial.print(" "); 
 		}
 
-		printf("\n"); 
+		Serial.println(); 
 	}
 
-	printf("--------------\n");
+	Serial.println("--------------");
 }
 
 void makeMove(int moveCol, char player) 
@@ -181,7 +122,7 @@ int negamax_NA(int parentCol, int color, int depth, int spdFactor, int isFaster)
 
 	if (depth == 0) 
 	{
-		printf("depth: 0\n");
+		Serial.println("depth: 0\n");
 		undoMove(parentCol);
 		return color*score;
 	}
